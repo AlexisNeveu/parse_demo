@@ -33,15 +33,20 @@ export default defineComponent({
     const loginPassword = ref("");
     const isLogged = ref(false);
 
+    //Log the user using the given credentials
     async function login() {
-      const user = await Parse.User.logIn(
+      Parse.User.logIn(
         loginPseudo.value,
         loginPassword.value
-      );
-      console.log(user.get("username"));
-      loginPseudo.value = "";
-      loginPassword.value = "";
-      isLogged.value = true;
+      ).then((result)=>{
+        console.log(result.get("username"));
+        //Reset the inputs
+        loginPseudo.value = "";
+        loginPassword.value = "";
+        //Make the "Continue" button available
+        isLogged.value = true;
+      })
+
     }
     function logout() {
       Parse.User.logOut();
@@ -49,7 +54,7 @@ export default defineComponent({
 
 
     onMounted(() => {
-      //Logout every time the page is reloaded to avoid session token issues -> To be fixed
+      //Logout every time the page is reloaded to avoid session token issues
       logout();
     })
 

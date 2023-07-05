@@ -42,6 +42,7 @@ const initAdminUser = async () => {
     admin = new Parse.User();
     admin.set("email", "admin.leto@ditrit.com");
     admin.set("username", "leto.admin");
+    admin.set("level","master")
     admin.set("password", "admin");
 
     try {

@@ -55,16 +55,16 @@
     <!-- When clicking this btn a request on the github api will be processed to retrieve the repo by owner name and name-->
     <!-- For now only public repos are available to import -->
     <div class="on-top flex flex-center">
-      <q-btn class="on-top" @click="retrieveRepo()"
+      <q-btn v-if="isGHUser" class="on-top" @click="retrieveRepo()"
         >Import a Project from GitHub</q-btn
       >
-      <input
+      <input v-if="isGHUser"
         class="on-top"
         v-model="repoOwner"
         type="text"
         placeholder="Owner name"
       />
-      <input
+      <input v-if="isGHUser"
         class="on-top"
         v-model="repoName"
         type="text"
@@ -91,6 +91,7 @@ export default defineComponent({
     const repoOwner = ref("");
     const repoName = ref("");
     const repoList = ref([]);
+    const isGHUser = ref(false);
 
     async function retrieveRepo() {
       //Retrieve the current user's access token to request on the api
@@ -150,6 +151,10 @@ export default defineComponent({
       const currentUser = Parse.User.current();
       if (currentUser != null) {
         username.value = currentUser.get("username");
+        if (currentUser.get("authData")){
+          //Enable GitHub API actions only if the user is logged via his github account
+          isGHUser.value = true;
+        }
       }
       //Update the repo list to be shown in the dropdown btn
       repoList.value = currentUser.get("repoList");
@@ -167,6 +172,7 @@ export default defineComponent({
       repoOwner,
       repoName,
       repoList,
+      isGHUser
     };
   },
 });
