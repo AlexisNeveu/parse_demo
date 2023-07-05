@@ -30,6 +30,11 @@ if (conf.authType == "internal") {
       component: () => import("layouts/MainLayout.vue"),
       children: [{ path: "", component: () => import("pages/Workshop.vue") }],
     },
+    {
+      path: "/allProjects",
+      component: () => import("layouts/MainLayout.vue"),
+      children: [{ path: "", component: () => import("pages/AllProjects.vue") }],
+    },
 
     // Always leave this as last one,
     // but you can also remove it
@@ -66,6 +71,16 @@ if (conf.authType == "internal") {
       path: "/workshop",
       component: () => import("layouts/MainLayout.vue"),
       children: [{ path: "", component: () => import("pages/Workshop.vue") }],
+    },
+    {
+      path: "/allProjects",
+      component: () => import("layouts/MainLayout.vue"),
+      children: [{ path: "", component: () => import("pages/AllProjects.vue") }],
+    },
+    {
+      path: "/manualLogin",
+      component: () => import("layouts/MainLayout.vue"),
+      children: [{ path: "", component: () => import("pages/ManualLogin.vue") }],
     },
 
     // Always leave this as last one,

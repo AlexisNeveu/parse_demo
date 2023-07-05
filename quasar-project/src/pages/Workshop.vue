@@ -1,6 +1,7 @@
 <template>
   <q-page>
     <q-btn class="on-right" to="/login">Back</q-btn>
+    <q-btn class="on-right" to="/allProjects">All projects</q-btn>
     <div class="flex flex-center">
       <h3>Welcome in your workshop {{ username }}</h3>
     </div>
@@ -44,8 +45,8 @@
         <q-list>
           <q-item v-for="item in repoList" clickable v-close-popup :key="item">
             <q-item-section>
-              <!-- The projects are displayed by their gitHub cloneURL -->
-              <q-item-label>{{ item.get("cloneURL") }}</q-item-label>
+              <!-- The projects are displayed with their name and GitHub owner -->
+              <q-item-label>{{ item.get("name") + " from "+ item.get("owner")}}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -78,9 +79,10 @@ const Parse = require("parse");
 
 Parse.initialize("myAppId", "JAVASCRIPT_KEY", "mySecretMasterKey");
 Parse.serverURL = "http://127.0.0.1:1337/parse";
-import axios from "axios";
+
 const { Octokit } = require("octokit");
 import { defineComponent, onMounted, ref } from "vue";
+
 
 export default defineComponent({
   name: "WorkshopPage",
@@ -113,18 +115,33 @@ export default defineComponent({
         .then((response) => {
           console.log(response);
           //Create a Repository object on Parse
-          const Repository = Parse.Object.extend("Repository");
-          const repo = new Repository();
-          //Give the r/w access only to the current user
-          repo.setACL(new Parse.ACL(currentUser));
+          //const Repository = Parse.Object.extend("Repository");
+          const repo = new Parse.Object("Repository");
+          //Give the correct r/w access
+          const acl = new Parse.ACL();
+          acl.setPublicReadAccess(true);
+          const role = new Parse.Role
+          const query = new Parse.Query(role)
+          query.equalTo("name","admin")
+          query.find().then((res)=>{
+            console.log(res)
+            acl.setWriteAccess(res[0],true)
+            acl.setWriteAccess(currentUser,true)
+          repo.setACL(acl);
           //Fill the object with the cloneURL
           repo.set("cloneURL", response.data.clone_url);
+          repo.set("name",response.data.name);
+          repo.set("owner",response.data.owner.login);
           //Push the retrieved repo to the repoList object of the current user
           currentUser.get("repoList").push(repo);
           console.log(currentUser.get("repoList"));
           //Save the changes
           currentUser.save();
           console.log(repo);
+          })
+          //acl.setWriteAccess("admin",true)
+
+
         });
     }
 

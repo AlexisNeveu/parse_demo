@@ -2,6 +2,7 @@
 const express = require('express');
 const ParseServer = require('parse-server').ParseServer;
 const cors = require('cors');
+const init = require('./init');
 
 const app = express();
 
@@ -28,4 +29,5 @@ app.use('/parse', api.app);
 const port = 1337;
 app.listen(port, function() {
   console.log('parse-server-example running on port ' + port + '.');
+  init.upgrade();
 });
