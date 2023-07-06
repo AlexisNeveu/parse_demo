@@ -77,9 +77,6 @@
 <script>
 const Parse = require("parse");
 
-Parse.initialize("myAppId", "JAVASCRIPT_KEY", "mySecretMasterKey");
-Parse.serverURL = "http://127.0.0.1:1337/parse";
-
 const { Octokit } = require("octokit");
 import { defineComponent, onMounted, ref } from "vue";
 
@@ -158,6 +155,8 @@ export default defineComponent({
       }
       //Update the repo list to be shown in the dropdown btn
       repoList.value = currentUser.get("repoList");
+      console.log("repoList :")
+      console.log(repoList.value)
 
       //Make the "create from scratch" option unavailable to "newbie" users
       if (currentUser.get("level") == "newbie") {

@@ -45,9 +45,6 @@
 <script>
 const Parse = require("parse");
 
-Parse.initialize("myAppId", "JAVASCRIPT_KEY", "mySecretMasterKey");
-Parse.serverURL = "http://127.0.0.1:1337/parse";
-
 import { defineComponent, ref, onMounted } from "vue";
 
 export default defineComponent({

@@ -8,7 +8,7 @@ const app = express();
 
 
 const api = new ParseServer({ 
-    databaseURI: 'mongodb://127.0.0.1/test',
+    databaseURI: 'mongodb://127.0.0.1/test', //By default with mongoDB (command "mongodb-runner start") 
     appId: 'myAppId',
     fileKey: 'myFileKey',
     masterKey: 'mySecretMasterKey',

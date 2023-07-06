@@ -14,8 +14,6 @@
 const Parse = require("parse");
 const axios = require("axios");
 
-Parse.initialize("myAppId", "JAVASCRIPT_KEY", "mySecretMasterKey");
-Parse.serverURL = "http://127.0.0.1:1337/parse";
 import { defineComponent } from "vue";
 
 async function statusChangeCallback(response) {

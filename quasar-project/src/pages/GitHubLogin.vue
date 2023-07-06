@@ -16,9 +16,6 @@ const Parse = require("parse");
 const axios = require("axios");
 const { Octokit, App } = require("octokit");
 
-Parse.initialize("myAppId", "JAVASCRIPT_KEY", "mySecretMasterKey");
-Parse.serverURL = "http://127.0.0.1:1337/parse";
-
 import { defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent({
