@@ -12,6 +12,7 @@ const api = new ParseServer({
     appId: 'myAppId',
     fileKey: 'myFileKey',
     masterKey: 'mySecretMasterKey',
+    cloud: './cloud/main.js',
     allowClientClassCreation: false,
     auth:{
       facebook: {

@@ -142,6 +142,8 @@ const createClasses = async () => {
       {name: "name", type: "String"},
       {name: "owner", type: "String"},
       {name: "cloneURL", type: "String"},
+      {name: "importedBy",type: "String"},
+      
     ]
   }, defautCLP);
   

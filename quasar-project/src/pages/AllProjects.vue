@@ -31,13 +31,34 @@ export default defineComponent({
     function deleteDialog(item){
       if(confirm("Delete "+ item.get("name")+" ?")){
         console.log(item.id)
-        const Repository = Parse.Object.extend("Repository")
-        const query = new Parse.Query(Repository);
-        query.equalTo("objectId",item.id);
-        query.find().then((result)=>{
-          console.log(result)
-          result[0].destroy()
+        console.log(item.get("importedBy"))
+        //const User = new Parse.Object.extend("User");
+        const userQuery = new Parse.Query(Parse.User);
+        userQuery.equalTo("username",item.get("importedBy"));
+        userQuery.find().then((r)=>{
+          var repoList = r[0].get("repoList");
+          console.log(repoList)
+          console.log(item)
+          repoList.forEach(element => {
+            /*if(element.id == item.id){
+              let index = repoList.indexOf(element);
+              console.log(index)
+              repoList.slice(index);
+              console.log(repoList);
+              r[0].unset("repoList");
+              r[0].set("repoList",repoList);
+              //r[0].save()
+            }*/
+          });
+          const Repository = Parse.Object.extend("Repository")
+          const query = new Parse.Query(Repository);
+          query.equalTo("objectId",item.id);
+          query.find().then((result)=>{
+            console.log(result)
+            result[0].destroy()
+          })
         })
+
 
       }
     };

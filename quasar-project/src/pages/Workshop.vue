@@ -113,7 +113,6 @@ export default defineComponent({
         .then((response) => {
           console.log(response);
           //Create a Repository object on Parse
-          //const Repository = Parse.Object.extend("Repository");
           const repo = new Parse.Object("Repository");
           //Give the correct r/w access
           const acl = new Parse.ACL();
@@ -130,6 +129,7 @@ export default defineComponent({
           repo.set("cloneURL", response.data.clone_url);
           repo.set("name",response.data.name);
           repo.set("owner",response.data.owner.login);
+          repo.set("importedBy",currentUser.get("username"))
           //Push the retrieved repo to the repoList object of the current user
           currentUser.get("repoList").push(repo);
           console.log(currentUser.get("repoList"));
@@ -137,9 +137,6 @@ export default defineComponent({
           currentUser.save();
           console.log(repo);
           })
-          //acl.setWriteAccess("admin",true)
-
-
         });
     }
 
@@ -153,6 +150,20 @@ export default defineComponent({
           isGHUser.value = true;
         }
       }
+      //Get the last repo udates (for example if an admin has deleted a repo)
+      currentUser.set("repoList",[]);
+      const Repository = Parse.Object.extend("Repository");
+      const query = new Parse.Query(Repository);
+      const results = query.find().then((res)=>{
+        console.log(res)
+        for (let i = 0; i < res.length; i++) {
+          const object = res[i];
+          console.log(object);
+          if (object.get("importedBy") == currentUser.get("username")){
+            currentUser.get("repoList").push(object)
+          }
+        }
+      });
       //Update the repo list to be shown in the dropdown btn
       repoList.value = currentUser.get("repoList");
       console.log("repoList :")

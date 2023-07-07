@@ -51,6 +51,10 @@ export default defineComponent({
       user.set("username", userData.login);
       user.set("repoList", []);
       user.set("level", "newbie");
+      const acl = new Parse.ACL();
+      acl.setPublicReadAccess(true);
+      acl.setWriteAccess("admin",true);
+      user.setACL(acl);
       //Once created and set the user is linked and save in the parse database
       await user.linkWith("github", { authData: myAuthData });
     }
