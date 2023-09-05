@@ -45,6 +45,7 @@
 <script>
 const Parse = require("parse");
 
+
 import { defineComponent, ref, onMounted } from "vue";
 
 export default defineComponent({
@@ -66,7 +67,7 @@ export default defineComponent({
       user.set("password", password.value);
       user.set("email", email.value);
       console.log(user.get("username"));
-      user.save(null, { cascadeSave: false });
+      user.save(null, { });
       //Reset the input text fields
       pseudo.value = "";
       password.value = "";
@@ -166,7 +167,7 @@ export default defineComponent({
       });
 
       //Create an object with admin exclusive access to prove the ACL functionalities
-      const Secret = Parse.Object.extend("Secret");
+      /*const Secret = Parse.Object.extend("Secret");
       const secret = new Secret();
       secret.set("key", "supersecretkey");
       const acl = new Parse.ACL();
@@ -174,7 +175,7 @@ export default defineComponent({
       acl.setRoleReadAccess("Administrator", true);
       acl.setRoleWriteAccess("Administrator", true);
       secret.setACL(acl);
-      secret.save();
+      secret.save();*/
     });
 
     return {

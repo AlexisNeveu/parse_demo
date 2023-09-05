@@ -6,7 +6,7 @@ exports.upgrade = async () => {
   const adminUser = await initAdminUser();
   const adminRole = await initAdminRole();
   await giveRoleToUser(adminRole, adminUser);
-  await createClasses();
+  //await createClasses();
   console.log("Initialization done !")
 
 };
@@ -44,6 +44,10 @@ const initAdminUser = async () => {
     admin.set("username", "leto.admin");
     admin.set("level","master")
     admin.set("password", "admin");
+    const acl = new Parse.ACL();
+    acl.setPublicReadAccess(true);
+    acl.setPublicWriteAccess(false);
+    admin.setACL(acl);
 
     try {
       admin = await admin.signUp();

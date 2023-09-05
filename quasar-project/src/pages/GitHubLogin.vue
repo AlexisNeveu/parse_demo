@@ -22,6 +22,7 @@ export default defineComponent({
   name: "GitHubLogin",
 
   setup() {
+
     const logged = ref(false);
     // This function retrieves the temporary code provided by the github api and that is used to get the access_token
     function getCode() {
@@ -56,7 +57,7 @@ export default defineComponent({
       acl.setWriteAccess("admin",true);
       user.setACL(acl);
       //Once created and set the user is linked and save in the parse database
-      await user.linkWith("github", { authData: myAuthData });
+      await user.linkWith("github", { authData: myAuthData, useMasterKey: true });
     }
     //This function is called when the login button is clicked
     //It allows the user after being authenticated via github to link his account to parse
@@ -64,7 +65,7 @@ export default defineComponent({
       const code = getCode();
       // This request on localhost:9999 is a request to gatekeeper which is a tool to bypass github oauth web flow CORS issues
       axios
-        .get("http://localhost:9999/authenticate/" + code)
+        .get("https://github.com/login/oauth/access_token/?client_id=4d893c6356341f56356b&client_secret=6e980dab9f3bea086487caf32ad5c23e981b178c&code=" + code)
         .then((response) => {
           console.log("GET access token: ");
           console.log(response);

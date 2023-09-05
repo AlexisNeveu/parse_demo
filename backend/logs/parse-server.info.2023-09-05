@@ -1,0 +1,5 @@
+{"level":"warn","message":"DeprecationWarning: The Parse Server option 'allowExpiredAuthDataToken' default will change to 'false' in a future version.","timestamp":"2023-09-05T08:37:47.665Z"}
+{"level":"info","message":"Running Migrations","timestamp":"2023-09-05T08:37:47.842Z"}
+{"level":"error","message":"Failed to run migrations: TypeError: Cannot read properties of undefined (reading 'className')","timestamp":"2023-09-05T08:37:53.918Z"}
+{"level":"info","message":"Running Migrations Completed","timestamp":"2023-09-05T08:37:53.920Z"}
+{"code":209,"level":"error","message":"Invalid session token","stack":"Error: Invalid session token\n    at Object.getAuthForSessionToken (C:\\Users\\alexi\\node_modules\\parse-server\\lib\\Auth.js:127:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async handleParseSession (C:\\Users\\alexi\\node_modules\\parse-server\\lib\\middlewares.js:292:21)","timestamp":"2023-09-05T08:38:31.210Z"}

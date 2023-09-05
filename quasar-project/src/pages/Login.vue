@@ -14,9 +14,16 @@
 <script>
 const Parse = require("parse");
 
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
   name: "LoginPage",
+  setup(){
+    onMounted(()=>{
+      if(Parse.User.current()){
+        Parse.User.logOut();
+      }
+    })
+  }
 });
 </script>

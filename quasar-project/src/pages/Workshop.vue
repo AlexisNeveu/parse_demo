@@ -5,8 +5,9 @@
     <div class="flex flex-center">
       <h3>Welcome in your workshop {{ username }}</h3>
     </div>
-    <div class="flex flex-center">
-      <!-- This button is not available to "newbie" users -->
+    <!--
+    <div class="flex flex-center"> -->
+      <!-- This button is not available to "newbie" users
       <q-btn id="tooltip-button" class="on-right" data-tooltip="Hello"
         >Create a project from scratch
         <q-tooltip
@@ -18,57 +19,93 @@
           Usable only by advanced users
         </q-tooltip>
       </q-btn>
-      <q-btn-dropdown class="on-right" label="Create a project from a template">
-        <!-- Reel template files to be inserted here -->
+      <q-btn-dropdown class="on-right" label="Create a project from a template"> -->
+        <!-- Reel template files to be inserted here
         <q-list>
           <q-item clickable v-close-popup>
             <q-item-section>
               <q-item-label>Template 1</q-item-label>
             </q-item-section>
           </q-item>
-
-          <q-item clickable v-close-popup>
-            <q-item-section>
-              <q-item-label>Template 2</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-close-popup>
-            <q-item-section>
-              <q-item-label>Template 3</q-item-label>
-            </q-item-section>
-          </q-item>
         </q-list>
       </q-btn-dropdown>
-      <!-- This button allows the user to chose one of his project stored in the backend -->
-      <q-btn-dropdown class="on-right" label="Open a recent project">
-        <q-list>
-          <q-item v-for="item in repoList" clickable v-close-popup :key="item">
-            <q-item-section>
-              <!-- The projects are displayed with their name and GitHub owner -->
-              <q-item-label>{{ item.get("name") + " from "+ item.get("owner")}}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
-    </div>
-    <!-- When clicking this btn a request on the github api will be processed to retrieve the repo by owner name and name-->
-    <!-- For now only public repos are available to import -->
+    </div> -->
     <div class="on-top flex flex-center">
-      <q-btn v-if="isGHUser" class="on-top" @click="retrieveRepo()"
-        >Import a Project from GitHub</q-btn
-      >
-      <input v-if="isGHUser"
+      <q-btn class="on-top" @click="declareLibrary()">Declare library</q-btn>
+      <input
         class="on-top"
-        v-model="repoOwner"
+        v-model="libName"
         type="text"
-        placeholder="Owner name"
+        placeholder="Library Name"
       />
-      <input v-if="isGHUser"
+      <input
         class="on-top"
-        v-model="repoName"
+        v-model="libUrl"
         type="text"
-        placeholder="Repository Name"
+        placeholder="Library URL"
+      />
+    </div>
+    <div class="on-top flex flex-center">
+      <q-btn @click="addRoleToUser()">Add Role To User</q-btn>
+      <input
+        class="on-top"
+        v-model="userName"
+        type="text"
+        placeholder="Username"
+      />
+      <input
+        class="on-top"
+        v-model="role"
+        type="text"
+        placeholder="Role"
+      />
+    </div>
+    <div class="on-top flex flex-center">
+      <q-btn @click="createGroup()">Create group</q-btn>
+      <input
+        class="on-top"
+        v-model="newGroupName"
+        type="text"
+        placeholder="Groupname"
+      />
+    </div>
+      <div class="on-top flex flex-center">
+      <q-btn @click="deleteGroup()">Delete group</q-btn>
+      <input
+        class="on-top"
+        v-model="deletegroup_groupname"
+        type="text"
+        placeholder="Groupname"
+      />
+    </div>
+    <div class="on-top flex flex-center">
+      <q-btn @click="addUserToGroup()">Add User to Group</q-btn>
+      <input
+        class="on-top"
+        v-model="addusertogroup_newusername"
+        type="text"
+        placeholder="Username"
+      />
+      <input
+        class="on-top"
+        v-model="addusertogroup_groupname"
+        type="text"
+        placeholder="Group"
+      />
+    </div>
+    <div class="on-top flex flex-center">
+      <q-btn @click="addGroupToGroup()">Add Group to Group</q-btn>
+      <input
+        class="on-top"
+        v-model="addgrouptogroup_groupname"
+        type="text"
+        placeholder="Group"
+      />
+      <input
+        class="on-top"
+        v-model="addgrouptogroup_groupnametoadd"
+        type="text"
+        placeholder="Group to add"
       />
     </div>
   </q-page>
@@ -77,7 +114,6 @@
 <script>
 const Parse = require("parse");
 
-const { Octokit } = require("octokit");
 import { defineComponent, onMounted, ref } from "vue";
 
 
@@ -85,60 +121,76 @@ export default defineComponent({
   name: "WorkshopPage",
   setup() {
     const username = ref("");
-    const repoOwner = ref("");
-    const repoName = ref("");
+    const libName = ref("");
+    const libUrl = ref("");
     const repoList = ref([]);
     const isGHUser = ref(false);
+    const role = ref ("");
+    const userName = ref ("");
+    const newGroupName = ref("");
+    const addusertogroup_groupname = ref("");
+    const addusertogroup_newusername = ref("");
+    const deletegroup_groupname = ref("");
+    const addgrouptogroup_groupname = ref("");
+    const addgrouptogroup_groupnametoadd = ref("");
 
-    async function retrieveRepo() {
-      //Retrieve the current user's access token to request on the api
-      const currentUser = Parse.User.current();
-      const userAccessToken = currentUser.get("authData").github.access_token;
+    async function declareLibrary() {
+      if (libName.value&&libUrl.value){
+        const lib = await Parse.Cloud.run("createLib", {lib_name: libName.value, git_url: libUrl.value});
+      }
+      else {
+        alert("Please provide name and url of your library")
+      }
+      }
 
-      // Octokit.js
-      // https://github.com/octokit/core.js#readme
-      const octokit = new Octokit({
-        auth: userAccessToken,
-      });
-      //Request the repo on the api by owner and name
-      await octokit
-        .request("GET /repos/" + repoOwner.value + "/" + repoName.value, {
-          owner: repoOwner.value,
-          repo: repoName.value,
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-            accept: "application/vnd.github+json",
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          //Create a Repository object on Parse
-          const repo = new Parse.Object("Repository");
-          //Give the correct r/w access
-          const acl = new Parse.ACL();
-          acl.setPublicReadAccess(true);
-          const role = new Parse.Role
-          const query = new Parse.Query(role)
-          query.equalTo("name","admin")
-          query.find().then((res)=>{
-            console.log(res)
-            acl.setWriteAccess(res[0],true)
-            acl.setWriteAccess(currentUser,true)
-          repo.setACL(acl);
-          //Fill the object with the cloneURL
-          repo.set("cloneURL", response.data.clone_url);
-          repo.set("name",response.data.name);
-          repo.set("owner",response.data.owner.login);
-          repo.set("importedBy",currentUser.get("username"))
-          //Push the retrieved repo to the repoList object of the current user
-          currentUser.get("repoList").push(repo);
-          console.log(currentUser.get("repoList"));
-          //Save the changes
-          currentUser.save();
-          console.log(repo);
-          })
-        });
-    }
+      async function addRoleToUser(){
+        if (role.value&&userName.value){
+            await Parse.Cloud.run("addUserLibAccess", { username:userName.value, roleName:role.value });
+        }
+        else {
+        alert("Please provide username and role to affect the permission")
+      }
+      }
+
+      async function createGroup(){
+        if (newGroupName.value){
+            await Parse.Cloud.run("createGroup", { groupName:newGroupName.value });
+        }
+        else {
+        alert("Please provide valid group name to create your group")
+      }
+      }
+
+      async function addUserToGroup(){
+        if (addusertogroup_groupname.value&&addusertogroup_newusername.value){
+            await Parse.Cloud.run("addUserToGroup", { username: addusertogroup_newusername.value, groupname: addusertogroup_groupname.value });
+            addusertogroup_groupname.value = "";
+            addusertogroup_newusername.value = "";
+        }
+        else {
+        alert("Please provide valid username and group to perform this")
+      }
+      }
+
+      async function deleteGroup(){
+        if (deletegroup_groupname.value){
+            await Parse.Cloud.run("deleteGroup", { groupname: deletegroup_groupname.value });
+        }
+        else {
+        alert("Please provide username and role to affect the permission")
+      }
+      }
+
+      async function addGroupToGroup(){
+        if (addgrouptogroup_groupname.value&&addgrouptogroup_groupnametoadd.value){
+            await Parse.Cloud.run("addUserToGroup", { groupname: addgrouptogroup_groupname.value, groupnameToAdd: addgrouptogroup_groupnametoadd.value });
+            addgrouptogroup_groupname.value = "";
+            addgrouptogroup_groupnametoadd.value = "";
+        }
+        else {
+        alert("Please provide valid username and group to perform this")
+      }
+      }
 
     onMounted(() => {
       //Display the page in function of the current user
@@ -150,39 +202,28 @@ export default defineComponent({
           isGHUser.value = true;
         }
       }
-      //Get the last repo udates (for example if an admin has deleted a repo)
-      currentUser.set("repoList",[]);
-      const Repository = Parse.Object.extend("Repository");
-      const query = new Parse.Query(Repository);
-      const results = query.find().then((res)=>{
-        console.log(res)
-        for (let i = 0; i < res.length; i++) {
-          const object = res[i];
-          console.log(object);
-          if (object.get("importedBy") == currentUser.get("username")){
-            currentUser.get("repoList").push(object)
-          }
-        }
-      });
-      //Update the repo list to be shown in the dropdown btn
-      repoList.value = currentUser.get("repoList");
-      console.log("repoList :")
-      console.log(repoList.value)
 
-      //Make the "create from scratch" option unavailable to "newbie" users
-      if (currentUser.get("level") == "newbie") {
-        var createFromScratchBtn = document.getElementById("tooltip-button");
-        createFromScratchBtn.style.color = "grey";
-        createFromScratchBtn.style.background = "#c0c0c0";
-      }
     });
     return {
       username,
-      retrieveRepo,
-      repoOwner,
-      repoName,
+      declareLibrary,
+      addRoleToUser,
+      createGroup,
+      libName,
+      libUrl,
       repoList,
-      isGHUser
+      isGHUser,
+      role,
+      userName,
+      newGroupName,
+      addUserToGroup,
+      addusertogroup_groupname,
+      addusertogroup_newusername,
+      deleteGroup,
+      deletegroup_groupname,
+      addGroupToGroup,
+      addgrouptogroup_groupname,
+      addgrouptogroup_groupnametoadd
     };
   },
 });
