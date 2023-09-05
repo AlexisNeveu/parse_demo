@@ -15,6 +15,7 @@
 const Parse = require("parse");
 const axios = require("axios");
 const { Octokit, App } = require("octokit");
+import { enterpriseServer36 } from "https://esm.sh/@octokit/plugin-enterprise-server";
 
 import { defineComponent, onMounted, ref } from "vue";
 
@@ -26,6 +27,7 @@ export default defineComponent({
     // This function retrieves the temporary code provided by the github api and that is used to get the access_token
     function getCode() {
       var code = window.location.href.match(/\?code=(.*)/)[1];
+      console.log(code);
       code = code.substring(0, 21);
       console.log("get code (): ");
       console.log(code);
@@ -70,30 +72,28 @@ export default defineComponent({
           console.log(response);
           //The object myAuthData must follow this model to link a github account to parse
           const myAuthData = {
-            id: "82414381", //This is the client id which is the id of the oauth app created via the github dashboard
+            id: "3ff683064f7ec27996f9", //This is the client id which is the id of the oauth app created via the github dashboard
             access_token: response.data.token,
           };
           console.log("myAuthData: ");
           console.log(myAuthData);
           //This request to fetch user data via the api and using the access token uses octokit as it is recommended in the github doc
-          const octokit = new Octokit({
-            auth: myAuthData.access_token,
+          const OctokitEnterprise36 = Octokit.plugin(enterpriseServer36);
+          const octokit = new OctokitEnterprise36({
+              auth:  myAuthData.access_token,
+              baseUrl: "https://sgithub.fr.world.socgen/api/v3",
           });
           octokit
-            .request("GET /user", {
-              headers: {
-                "X-GitHub-Api-Version": "2022-11-28",
-              },
-            })
+            .request("GET /user")
             .then((resp) => {
               console.log("GET /user: ");
               console.log(resp.data);
               displayLoggingInfos(resp.data);
-              linkUserToParse(resp.data, myAuthData).then((r) => {
+              /* linkUserToParse(resp.data, myAuthData).then((r) => {
                 console.log(Parse.User.current().get("username"));
                 logged.value = true;
-              });
-            });
+              }); */
+            }); 
         });
     }
     onMounted(() => {

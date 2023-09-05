@@ -3,7 +3,7 @@
     <div>
       <!--<q-btn to="/fblogin">Facebook</q-btn>-->
       <q-btn
-        href="https://github.com/login/oauth/authorize?client_id=4d893c6356341f56356b"
+        href="https://sgithub.fr.world.socgen/login/oauth/authorize?client_id=3ff683064f7ec27996f9"
         >GitHub</q-btn
       >
       <q-btn to="/manualLogin">Manual Login</q-btn>
