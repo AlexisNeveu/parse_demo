@@ -7,8 +7,8 @@ const init = require('./init');
 const app = express();
 
 
-const api = new ParseServer({ 
-    databaseURI: 'mongodb://127.0.0.1/test', //By default with mongoDB (command "mongodb-runner start") 
+const api = new ParseServer({
+    databaseURI: 'mongodb://127.0.0.1/test', //By default with mongoDB (command "mongodb-runner start")
     appId: 'myAppId',
     fileKey: 'myFileKey',
     masterKey: 'mySecretMasterKey',
@@ -20,6 +20,9 @@ const api = new ParseServer({
       },
       github:{
         enabled:true
+      },
+      sgithub:{
+        module: "./sgithub"
       }
      }
 });
