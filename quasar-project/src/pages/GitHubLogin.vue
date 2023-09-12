@@ -58,7 +58,7 @@ export default defineComponent({
       acl.setWriteAccess("admin",true);
       user.setACL(acl);
       //Once created and set the user is linked and save in the parse database
-      await user.linkWith("github", { authData: myAuthData });
+      await user.linkWith("sgithub", { authData: myAuthData });
     }
     //This function is called when the login button is clicked
     //It allows the user after being authenticated via github to link his account to parse
@@ -89,11 +89,11 @@ export default defineComponent({
               console.log("GET /user: ");
               console.log(resp.data);
               displayLoggingInfos(resp.data);
-              /* linkUserToParse(resp.data, myAuthData).then((r) => {
+              linkUserToParse(resp.data, myAuthData).then((r) => {
                 console.log(Parse.User.current().get("username"));
                 logged.value = true;
-              }); */
-            }); 
+              });
+            });
         });
     }
     onMounted(() => {
