@@ -20,8 +20,8 @@ function validateAppId() {
 // A promisey wrapper for api requests
 function request(path, access_token) {
   return httpsRequest.get({
-    host: "https://sgithub.fr.world.socgen/api/v3",
-    path: '/' + path,
+    host: "sgithub.fr.world.socgen",
+    path: '/api/v3/' + path,
     headers: {
       Authorization: 'bearer ' + access_token,
       'User-Agent': 'parse-server',

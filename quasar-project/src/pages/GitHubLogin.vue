@@ -72,7 +72,7 @@ export default defineComponent({
           console.log(response);
           //The object myAuthData must follow this model to link a github account to parse
           const myAuthData = {
-            id: "3ff683064f7ec27996f9", //This is the client id which is the id of the oauth app created via the github dashboard
+            id: "52890", //This is the client id which is the id of the oauth app created via the github dashboard
             access_token: response.data.token,
           };
           console.log("myAuthData: ");

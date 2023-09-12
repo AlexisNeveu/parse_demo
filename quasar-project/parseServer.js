@@ -3,8 +3,9 @@ const express = require('express');
 const ParseServer = require('parse-server').ParseServer;
 const cors = require('cors');
 const init = require('./init');
-
+const sgithub = require('./sgithub');
 const app = express();
+
 
 
 const api = new ParseServer({
@@ -22,7 +23,7 @@ const api = new ParseServer({
         enabled:true
       },
       sgithub:{
-        module: "./sgithub"
+        module: sgithub
       }
      }
 });
