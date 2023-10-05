@@ -17,7 +17,7 @@ const { Octokit, App } = require("octokit");
 import { defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent({
-  name: "GitHubLogin",
+  name: "SGitHubLogin",
 
   setup() {
 
@@ -34,13 +34,13 @@ export default defineComponent({
     //It allows the user after being authenticated via github to link his account to parse
     async function login() {
       const code = getCode();
-      await Parse.Cloud.run("GitHubAuth", {code: code}).then((result)=>{
+      await Parse.Cloud.run("SGitHubAuth", {code: code}).then((result)=>{
         console.log("Successfully authenticated");
-        console.log(result.get('authData').github)
+        console.log(result.get('authData').sgithub)
         const user = new Parse.User();
         user.set("username", result.get('username'));
         user.set('firstname', result.get('firstname'));
-        user.linkWith("github", {authData: result.get('authData').github}).then(()=>{
+        user.linkWith("sgithub", {authData: result.get('authData').sgithub}).then(()=>{
           console.log(Parse.User.current());
         })
       })
@@ -51,6 +51,8 @@ export default defineComponent({
     return {
       login,
       getCode,
+      displayLoggingInfos,
+      linkUserToParse,
       logged,
     };
   },
