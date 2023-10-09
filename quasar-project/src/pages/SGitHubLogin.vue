@@ -34,13 +34,13 @@ export default defineComponent({
     //It allows the user after being authenticated via github to link his account to parse
     async function login() {
       const code = getCode();
-      await Parse.Cloud.run("SGitHubAuth", {code: code}).then((result)=>{
+      await Parse.Cloud.run("GitHubAuth", {code: code}).then((result)=>{
         console.log("Successfully authenticated");
-        console.log(result.get('authData').sgithub)
+        console.log(result.get('authData'))
         const user = new Parse.User();
         user.set("username", result.get('username'));
         user.set('firstname', result.get('firstname'));
-        user.linkWith("sgithub", {authData: result.get('authData').sgithub}).then(()=>{
+        user.linkWith("enterpriseGithub", {authData: result.get('authData').enterpriseGithub}).then(()=>{
           console.log(Parse.User.current());
         })
       })
